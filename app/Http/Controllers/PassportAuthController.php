@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-
-class AuthController extends Controller
+class PassportAuthController extends Controller
 {
+    //
   public function register(Request $request)
   {
     $this->validate($request, [
