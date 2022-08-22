@@ -13,6 +13,7 @@ class PassportAuthController extends Controller
      * Registration
      */
     public function register(Request $request){
+
         $this->validate($request,[
             'name'=>'required|min:4',
             'email'=>'required|email',
@@ -23,6 +24,7 @@ class PassportAuthController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
+        var_dump($user);
         $oClient = OClient::where('password_client',1)->first();
         return $this->getTokenAndRefreshToken($oClient, $user->email, $user->password);
         // $token = $user->createToken('LaravelAuthApp')->accessToken;
@@ -33,12 +35,12 @@ class PassportAuthController extends Controller
      */
     public function login(Request $request){
         $data=['email'=>$request->email, 'password'=>$request->password];
-        var_dump($data);
-        var_dump(auth()->attempt($data));
-        if(!auth()->attempt($data)){
+        // var_dump($data);
+        // var_dump(auth()->attempt($data));
+        if(auth()->attempt($data)){
          $oClient = OClient::where("password_client",1)->first();
          return $this->getTokenAndRefreshToken($oClient, request('email'),request('password'));
-    //   return response()->json($this->getTokenAndRefreshToken($oClient, request('email'), request('password')),200);
+      return response()->json($this->getTokenAndRefreshToken($oClient, request('email'), request('password')),200);
 
         }else {
             return response()->json(['error' =>'Unauthorized'],401);
@@ -46,8 +48,8 @@ class PassportAuthController extends Controller
     }
 
 public function getTokenAndRefreshToken(OClient $oClient, $email, $password) {
-      $oClient = OClient::find($laravelPasswordGrantClientId);
-      $http = new Client;
+      $oClient = OClient::where('password_client',1)->first();
+      $http = new OClient;
       $response = $http->request('POST', 'http://localhost:8000/oauth/token', [
           'form_params' => [
               'grant_type' => 'password',
