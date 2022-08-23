@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Models\Post;
 class PostController extends Controller
 {
     //
@@ -11,12 +11,14 @@ class PostController extends Controller
         $posts = auth()->user()->posts;
         return response()->json(['success'=>true, 'data'=>$posts]);
     }
+
     public function show($id){
-$post = auth()->user()->posts()->find($id);
-if(!post){
+    $post = auth()->user()->posts()->find($id);
+    if(!$post){
     return response()->json(['success'=>false, 'message'=>'Post not found']);
 
 }
+return response()->json(['success'=>true, 'data'=>$post]);
     }
     public function store(Request $request){
         $this->validate($request,[
@@ -33,12 +35,12 @@ if(!post){
     }
     public function update(Request $request, $id){
         $post = auth()->user()->posts()->find($id);
-        if(!post){
+        if(!$post){
             return response()->json(['success'=>false,'message'=>'Post not found'],400);
         }
-        $updated = $post->fill($request->all())->save();
+        $updated = $post->fill($request->all())->update();
         if($updated)
-        return response()->json(['success'=>true]);
+        return response()->json(['success'=>true,'data'=>$updated]);
         else return response()->json(['success'=>true,'message'=>'Post can not be updated'],500);
     }
     public function destroy($id){
