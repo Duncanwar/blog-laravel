@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\User;
 use GuzzleHttp\Client;
+use Validator;
 use Laravel\Passport\Client as OClient;
 class PassportAuthController extends Controller
 {
